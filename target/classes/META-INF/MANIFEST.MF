@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Built-By: 0200
+Build-Jdk: 15.0.1
+Implementation-Title: onlinetest
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: linkaja
+Implementation-URL: http://www.example.com
+Created-By: Maven Integration for Eclipse
+
