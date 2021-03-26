@@ -64,8 +64,35 @@ public class LinkAjaService {
 		return "Insert Customer Sukses";
 	}
 	
-	public void updateAmount() {
+	public String updateAmount(String fromAcc, int amount, String destAcc) throws Exception{
+		String retval = null;
+		List<AccountModel> accInfo = accRepo.getInfoByAccNo(fromAcc);
 		
+		for(AccountModel accModel : accInfo) {
+			int balance = accModel.getBalance();
+			int newBalance = balance - amount;
+			if(newBalance < 0) {
+				retval = "Balance tidak cukup";
+			}else {
+				accModel.setBalance(newBalance); //update balance
+				accRepo.save(accModel);
+				
+				updtDestAcc(destAcc, balance);
+			}
+		}
+		
+		return retval;
+	}
+	
+	
+	public void updtDestAcc(String destAcc, int transferBalance) throws Exception {
+		List<AccountModel> accList = accRepo.getInfoByAccNo(destAcc);
+		
+		for(AccountModel accModel : accList) {
+			int addBalance = accModel.getBalance() + transferBalance;
+			accModel.setBalance(addBalance);
+			accRepo.save(accModel);
+		}
 	}
 	
 	public String getAccInfo(String accNo) {
@@ -86,13 +113,15 @@ public class LinkAjaService {
 		return infoDto.toString();
 	}
 	
-	public String transferAccSeq(String fromAcc, TransferDto transferDto) {
+	public String transferAccSeq(String fromAcc, TransferDto transferDto) throws Exception {
 		String retval = null;
 		String account = transferDto.getToAccountNumber();
 		String checkAcc = accRepo.checkAccount(account);
 		
 		if(checkAcc.equals("1")) {
-			
+			String destAcc = transferDto.getToAccountNumber();
+			int amount = Integer.valueOf(transferDto.getAmount());
+			updateAmount(fromAcc, amount, destAcc);
 		}else {
 			retval = String.valueOf(HttpStatus.NO_CONTENT) + " - Account Tidak Terdaftar";
 		}
