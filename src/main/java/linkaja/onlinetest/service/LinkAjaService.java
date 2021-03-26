@@ -1,5 +1,6 @@
 package linkaja.onlinetest.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -9,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import linkaja.onlinetest.dto.AccountDto;
 import linkaja.onlinetest.dto.AccountInfoDto;
+import linkaja.onlinetest.dto.CustomerDto;
 import linkaja.onlinetest.dto.TransferDto;
 import linkaja.onlinetest.model.AccountModel;
 import linkaja.onlinetest.model.CustomerModel;
@@ -27,12 +30,38 @@ public class LinkAjaService {
 	@Autowired
 	CustomerRepo custRepo;
 	
-	public void addAccount() {
+	public String addAccount(List<AccountDto> accArr) throws Exception {
+		AccountModel acc;
+		CustomerModel custModel;
+		for(AccountDto accDto : accArr) {
+			acc = new AccountModel(); 
+			acc.setAccountNumber(accDto.getAccountNumber());
+			acc.setCustomerNumber(accDto.getCustomerNumber());
+			acc.setBalance(accDto.getBalance());
+
+//			
+//			custModel = new CustomerModel();
+//			custModel.setCustomerNumber(accDto.getCustomerNumber());
+//			
+//			Set<CustomerModel> custSet = new HashSet<CustomerModel>();
+//			custSet.add(custModel);
+//			
+			accRepo.save(acc);
+		}
 		
+		return "Insert Account Sukses";
 	}
 	
-	public void addCustomer() {
+	public String addCustomer(List<CustomerDto> custArr) throws Exception {
+		CustomerModel customer;
+		for(CustomerDto custDto : custArr) {
+			customer = new CustomerModel();
+			customer.setCustomerNumber( custDto.getCustomerNumber());
+			customer.setName(custDto.getName());
+			custRepo.save(customer);
+		}
 		
+		return "Insert Customer Sukses";
 	}
 	
 	public void updateAmount() {
@@ -45,13 +74,13 @@ public class LinkAjaService {
 		AccountInfoDto infoDto = new AccountInfoDto();
 		
 		for(AccountModel accModel : accList) {
-			infoDto.setAccountNumber(accModel.getAccountNumber());
+			infoDto.setAccountNumber(String.valueOf(accModel.getAccountNumber()));
 			infoDto.setBalance(accModel.getBalance());
 			
-			Set<CustomerModel> custSet = accModel.getCustomerNumber();
-			for(CustomerModel custModel : custSet) {
-				infoDto.setCustomerName(custModel.getName());
-			}
+			String custNo = accModel.getCustomerNumber();
+			String custName = custRepo.getNameByCustNo(custNo);
+			
+			infoDto.setCustomerName(custName);
 		}
 		
 		return infoDto.toString();

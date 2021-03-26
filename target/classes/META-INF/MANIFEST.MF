@@ -4,6 +4,6 @@ Build-Jdk: 15.0.1
 Implementation-Title: onlinetest
 Implementation-Version: 0.0.1-SNAPSHOT
 Implementation-Vendor-Id: linkaja
-Implementation-URL: http://www.example.com
+Implementation-URL: https://spring.io/projects/spring-boot/onlinetest
 Created-By: Maven Integration for Eclipse
 

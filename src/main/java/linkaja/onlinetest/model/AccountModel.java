@@ -5,11 +5,15 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import com.sun.istack.NotNull;
 
@@ -19,16 +23,27 @@ public class AccountModel {
 	
 	@Id
 	@Column(name="account_number")
+	@GeneratedValue(generator="system-uuid")
+	@GenericGenerator(name="system-uuid", strategy = "uuid")
 	private String accountNumber;
 	
-	@NotNull
-	@OneToOne
-	@JoinColumn(name="cust_id")
+//	@JoinColumn(name="cust_id")
 	@Column(name="customer_number")
-	private Set<CustomerModel> customerNumber = new HashSet<CustomerModel>();
+	private String customerNumber;
 	
 	@NotNull
 	private int balance;
+
+//	@NotNull
+//	@JoinColumn(name="cust_id")
+//	@Column(name="customer_number")
+//	private Set<CustomerModel> customerSet = new HashSet<CustomerModel>();
+	
+	
+	
+	public String getCustomerNumber() {
+		return customerNumber;
+	}
 
 	public String getAccountNumber() {
 		return accountNumber;
@@ -38,14 +53,10 @@ public class AccountModel {
 		this.accountNumber = accountNumber;
 	}
 
-	
-	public Set<CustomerModel> getCustomerNumber() {
-		return customerNumber;
-	}
-
-	public void setCustomerNumber(Set<CustomerModel> customerNumber) {
+	public void setCustomerNumber(String customerNumber) {
 		this.customerNumber = customerNumber;
 	}
+
 
 	public int getBalance() {
 		return balance;

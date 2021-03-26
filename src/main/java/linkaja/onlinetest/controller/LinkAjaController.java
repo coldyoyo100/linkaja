@@ -1,5 +1,7 @@
 package linkaja.onlinetest.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,15 +24,37 @@ public class LinkAjaController {
 	@Autowired
 	LinkAjaService linkService;
 	
-	@PostMapping
-	public ResponseEntity<?> addAccount(@RequestBody AccountDto accDto) throws Exception {
-		
-		return ResponseEntity.ok(null);
+	@PostMapping("/test")
+	public String testingApi() {
+		return "Linkaja API";
 	}
 	
-	public ResponseEntity<?> addAccount(@RequestBody CustomerDto custDto) throws Exception {
-		
-		return ResponseEntity.ok(null);
+	@PostMapping("/addAccount")
+	public ResponseEntity<?> addAccount(@RequestBody List<AccountDto> accArr) throws Exception {
+		String retval = null;
+		try {
+			if(accArr.size()> 0)
+				retval = linkService.addAccount(accArr);
+			else
+				return ResponseEntity.ok("Tidak ada data untuk inseert");
+		}catch(Exception e){
+			return ResponseEntity.ok(e.getMessage());
+		}
+		return ResponseEntity.ok(retval);
+	}
+	
+	@PostMapping("/addCustomer")
+	public ResponseEntity<?> addCustomer(@RequestBody List<CustomerDto> custArr) throws Exception {
+		String retval = null;
+		try {
+			if(custArr.size() > 0)
+				retval = linkService.addCustomer(custArr);
+			else
+				return ResponseEntity.ok("Tidak ada data untuk inseert");
+		}catch(Exception e){
+			return ResponseEntity.ok(e.getMessage());
+		}
+		return ResponseEntity.ok(retval);
 	}
 	
 	
